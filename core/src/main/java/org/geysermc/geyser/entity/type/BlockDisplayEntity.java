@@ -28,7 +28,10 @@ package org.geysermc.geyser.entity.type;
 import lombok.Getter;
 import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
+import org.geysermc.geyser.entity.DisplayBedrockEntityDefinitions;
+import org.geysermc.geyser.entity.DisplayBlockModel;
 import org.geysermc.geyser.entity.spawn.EntitySpawnContext;
+import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
 
 @Getter
@@ -40,7 +43,16 @@ public class BlockDisplayEntity extends DisplayBaseEntity {
     }
 
     public void setBlock(IntEntityMetadata entityMetadata) {
-        this.block = session.getBlockMappings().getBedrockBlock(entityMetadata.getPrimitiveValue());
+        int javaBlockState = entityMetadata.getPrimitiveValue();
+        this.block = session.getBlockMappings().getBedrockBlock(javaBlockState);
         this.metadata.put(EntityDataTypes.BLOCK, block);
+
+        String javaIdentifier = BlockState.of(javaBlockState).block().javaIdentifier().toString();
+        DisplayBlockModel model = DisplayBlockModel.fromJavaIdentifier(javaIdentifier);
+        if (model == null) {
+            model = DisplayBlockModel.STONE;
+            warnUnsupported("BlockDisplay model " + javaIdentifier);
+        }
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.BLOCK_MODEL, model.modelId());
     }
 }

@@ -81,12 +81,18 @@ public class DisplayBaseEntity extends Entity {
 
     public void setInterpolationDelay(IntEntityMetadata entityMetadata) {
         this.interpolationDelay = entityMetadata.getPrimitiveValue();
-        warnUnsupported("interpolation delay");
+        if (propertyManager != null) {
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.INTERPOLATION_DELAY,
+                    Math.clamp(interpolationDelay, -1200, 1200));
+        }
     }
 
     public void setTransformationInterpolationDuration(IntEntityMetadata entityMetadata) {
         this.transformationInterpolationDuration = entityMetadata.getPrimitiveValue();
-        warnUnsupported("transformation interpolation duration");
+        if (propertyManager != null) {
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.INTERPOLATION_DURATION,
+                    Math.clamp(transformationInterpolationDuration, 0, 1200));
+        }
     }
 
     public void setPositionRotationInterpolationDuration(IntEntityMetadata entityMetadata) {
