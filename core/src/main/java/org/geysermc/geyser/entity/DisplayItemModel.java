@@ -28,42 +28,40 @@ package org.geysermc.geyser.entity;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Static BlockDisplay models shipped by the matching Bedrock resource pack.
+ * Static ItemDisplay textures shipped by the matching Bedrock resource pack.
  * IDs are resource-pack ABI and must remain aligned with its texture array.
  */
-public enum DisplayBlockModel {
-    STONE("minecraft:stone", 0),
-    DIAMOND_BLOCK("minecraft:diamond_block", 1),
-    GOLD_BLOCK("minecraft:gold_block", 2),
-    IRON_BLOCK("minecraft:iron_block", 3),
-    EMERALD_BLOCK("minecraft:emerald_block", 4),
-    COAL_BLOCK("minecraft:coal_block", 5),
-    LAPIS_BLOCK("minecraft:lapis_block", 6),
-    REDSTONE_BLOCK("minecraft:redstone_block", 7),
-    NETHERITE_BLOCK("minecraft:netherite_block", 8);
+public enum DisplayItemModel {
+    DIAMOND("minecraft:diamond", 0),
+    IRON_INGOT("minecraft:iron_ingot", 1),
+    GOLD_INGOT("minecraft:gold_ingot", 2),
+    EMERALD("minecraft:emerald", 3),
+    COAL("minecraft:coal", 4),
+    REDSTONE("minecraft:redstone", 5),
+    NETHERITE_INGOT("minecraft:netherite_ingot", 6);
 
     private final String javaIdentifier;
     private final int modelId;
 
-    DisplayBlockModel(String javaIdentifier, int modelId) {
+    DisplayItemModel(String javaIdentifier, int modelId) {
         this.javaIdentifier = javaIdentifier;
         this.modelId = modelId;
-    }
-
-    public int modelId() {
-        return modelId;
     }
 
     public String javaIdentifier() {
         return javaIdentifier;
     }
 
+    public int modelId() {
+        return modelId;
+    }
+
     public static int maxModelId() {
         return values().length - 1;
     }
 
-    public static @Nullable DisplayBlockModel fromJavaIdentifier(String javaIdentifier) {
-        for (DisplayBlockModel model : values()) {
+    public static @Nullable DisplayItemModel fromJavaIdentifier(String javaIdentifier) {
+        for (DisplayItemModel model : values()) {
             if (model.javaIdentifier.equals(javaIdentifier)) {
                 return model;
             }

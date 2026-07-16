@@ -39,6 +39,9 @@ public final class DisplayBedrockEntityDefinitions {
     public static final IntProperty INTERPOLATION_DURATION = intProperty("interpolation_duration", 0, 1200, 0);
     public static final IntProperty INTERPOLATION_DELAY = intProperty("interpolation_delay", -1200, 1200, 0);
     public static final IntProperty BLOCK_MODEL = intProperty("block_model", 0, DisplayBlockModel.maxModelId(), 0);
+    public static final IntProperty ITEM_MODEL = intProperty("item_model", 0, DisplayItemModel.maxModelId(), 0);
+    public static final IntProperty ITEM_CONTEXT = intProperty("item_context", 0, 8, 0);
+    public static final IntProperty ITEM_VISIBLE = intProperty("item_visible", 0, 1, 0);
     public static final FloatProperty ENTITY_YAW = rotationProperty("entity_yaw");
     public static final FloatProperty ENTITY_PITCH = rotationProperty("entity_pitch");
     public static final FloatProperty TRANSLATION_X = geometryPositionProperty("translation_x");
@@ -90,6 +93,8 @@ public final class DisplayBedrockEntityDefinitions {
                 .add(RIGHT_ROTATION_X).add(RIGHT_ROTATION_Y).add(RIGHT_ROTATION_Z);
         if (blockDisplay) {
             propertiesBuilder.add(BLOCK_MODEL);
+        } else {
+            propertiesBuilder.add(ITEM_MODEL).add(ITEM_CONTEXT).add(ITEM_VISIBLE);
         }
         GeyserEntityProperties properties = propertiesBuilder.build();
         CustomBedrockEntityDefinition definition = new CustomBedrockEntityDefinition(Identifier.of(identifier), properties);

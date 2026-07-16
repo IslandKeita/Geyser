@@ -30,14 +30,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class DisplayBlockModelTest {
+class DisplayItemModelTest {
     @Test
     void mapsStaticPackModels() {
-        for (DisplayBlockModel model : DisplayBlockModel.values()) {
-            assertEquals(model, DisplayBlockModel.fromJavaIdentifier(model.javaIdentifier()));
+        for (DisplayItemModel model : DisplayItemModel.values()) {
+            assertEquals(model, DisplayItemModel.fromJavaIdentifier(model.javaIdentifier()));
             assertEquals(model.ordinal(), model.modelId());
         }
-        assertEquals(DisplayBlockModel.values().length - 1, DisplayBlockModel.maxModelId());
-        assertNull(DisplayBlockModel.fromJavaIdentifier("minecraft:oak_stairs"));
+        assertEquals(DisplayItemModel.values().length - 1, DisplayItemModel.maxModelId());
+        assertNull(DisplayItemModel.fromJavaIdentifier("minecraft:diamond_sword"));
     }
 }

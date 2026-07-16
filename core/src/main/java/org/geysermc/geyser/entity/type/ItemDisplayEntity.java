@@ -29,7 +29,10 @@ import lombok.Getter;
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
+import org.geysermc.geyser.entity.DisplayBedrockEntityDefinitions;
+import org.geysermc.geyser.entity.DisplayItemModel;
 import org.geysermc.geyser.entity.spawn.EntitySpawnContext;
+import org.geysermc.geyser.registry.type.ItemMapping;
 import org.geysermc.geyser.translator.item.BedrockItemBuilder;
 import org.geysermc.geyser.translator.item.ItemTranslator;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
@@ -46,13 +49,35 @@ public class ItemDisplayEntity extends DisplayBaseEntity {
     }
 
     public void setItem(EntityMetadata<ItemStack, ?> entityMetadata) {
-        this.item = ItemTranslator.translateToBedrock(session, entityMetadata.getValue());
+        ItemStack javaItem = entityMetadata.getValue();
+        this.item = ItemTranslator.translateToBedrock(session, javaItem);
         NbtMap itemNbt = BedrockItemBuilder.createItemNbt(item).build();
         this.metadata.put(EntityDataTypes.DISPLAY_FIREWORK, itemNbt);
+
+        if (javaItem == null) {
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.ITEM_VISIBLE, 0);
+            return;
+        }
+
+        ItemMapping mapping = session.getItemMappings().getMapping(javaItem);
+        String javaIdentifier = mapping.getJavaItem().javaIdentifier();
+        if (javaIdentifier.equals("minecraft:air")) {
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.ITEM_VISIBLE, 0);
+            return;
+        }
+
+        DisplayItemModel model = DisplayItemModel.fromJavaIdentifier(javaIdentifier);
+        if (model == null) {
+            model = DisplayItemModel.DIAMOND;
+            warnUnsupported("ItemDisplay model " + javaIdentifier);
+        }
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.ITEM_MODEL, model.modelId());
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.ITEM_VISIBLE, 1);
     }
 
     public void setItemTransform(ByteEntityMetadata entityMetadata) {
         this.itemTransform = entityMetadata.getPrimitiveValue();
-        warnUnsupported("item display transform");
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.ITEM_CONTEXT,
+                Math.clamp(itemTransform, (byte) 0, (byte) 8));
     }
 }

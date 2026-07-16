@@ -61,7 +61,7 @@ class DisplayEntityDefinitionsTest {
     void definesDisplayPropertiesPerEntity() {
         mockContext(() -> {
             assertEquals(17, DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().size());
-            assertEquals(16, DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().size());
+            assertEquals(19, DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().size());
             assertTrue(DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().contains(
                     DisplayBedrockEntityDefinitions.ENTITY_YAW));
             assertTrue(DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().contains(
@@ -72,6 +72,10 @@ class DisplayEntityDefinitionsTest {
                     DisplayBedrockEntityDefinitions.BLOCK_MODEL));
             assertFalse(DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().contains(
                     DisplayBedrockEntityDefinitions.BLOCK_MODEL));
+            assertTrue(DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().contains(
+                    DisplayBedrockEntityDefinitions.ITEM_MODEL));
+            assertTrue(DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().contains(
+                    DisplayBedrockEntityDefinitions.ITEM_CONTEXT));
         });
     }
 }
