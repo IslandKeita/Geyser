@@ -35,6 +35,11 @@ import org.geysermc.geyser.registry.Registries;
  * The matching identifiers, properties, and bone hierarchy are provided by a static resource pack.
  */
 public final class DisplayBedrockEntityDefinitions {
+    public static final FloatProperty ENTITY_YAW = rotationProperty("entity_yaw");
+    public static final FloatProperty ENTITY_PITCH = rotationProperty("entity_pitch");
+    public static final FloatProperty TRANSLATION_X = geometryPositionProperty("translation_x");
+    public static final FloatProperty TRANSLATION_Y = geometryPositionProperty("translation_y");
+    public static final FloatProperty TRANSLATION_Z = geometryPositionProperty("translation_z");
     public static final FloatProperty SCALE_X = floatProperty("scale_x", -64f, 64f, 1f);
     public static final FloatProperty SCALE_Y = floatProperty("scale_y", -64f, 64f, 1f);
     public static final FloatProperty SCALE_Z = floatProperty("scale_z", -64f, 64f, 1f);
@@ -63,8 +68,14 @@ public final class DisplayBedrockEntityDefinitions {
         return floatProperty(path, -360f, 360f, 0f);
     }
 
+    private static FloatProperty geometryPositionProperty(String path) {
+        return floatProperty(path, -1024f, 1024f, 0f);
+    }
+
     private static CustomBedrockEntityDefinition register(String identifier) {
         GeyserEntityProperties properties = new GeyserEntityProperties.Builder(identifier)
+                .add(ENTITY_YAW).add(ENTITY_PITCH)
+                .add(TRANSLATION_X).add(TRANSLATION_Y).add(TRANSLATION_Z)
                 .add(SCALE_X).add(SCALE_Y).add(SCALE_Z)
                 .add(LEFT_ROTATION_X).add(LEFT_ROTATION_Y).add(LEFT_ROTATION_Z)
                 .add(RIGHT_ROTATION_X).add(RIGHT_ROTATION_Y).add(RIGHT_ROTATION_Z)

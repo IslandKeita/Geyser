@@ -49,6 +49,7 @@ public final class DisplayQuaternionConverter {
         if (!Float.isFinite(angles.getX()) || !Float.isFinite(angles.getY()) || !Float.isFinite(angles.getZ())) {
             return Vector3f.ZERO;
         }
-        return angles;
+        // Bedrock animation bone Y/Z rotations use the opposite visual sign from Java display quaternions.
+        return Vector3f.from(angles.getX(), -angles.getY(), -angles.getZ());
     }
 }

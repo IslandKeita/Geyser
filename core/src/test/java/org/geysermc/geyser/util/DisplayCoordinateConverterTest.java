@@ -39,8 +39,7 @@ class DisplayCoordinateConverterTest {
 
     @Test
     void convertsBlocksToGeometryUnits() {
-        assertEquals(Vector3f.from(16f, -32f, 8f),
+        assertEquals(Vector3f.from(16f, -32f, -8f),
                 DisplayCoordinateConverter.blocksToGeometryUnits(Vector3f.from(1f, -2f, 0.5f)));
     }
 }
-

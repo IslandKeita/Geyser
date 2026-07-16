@@ -42,8 +42,8 @@ class DisplayQuaternionConverterTest {
     @Test
     void convertsAxisRotations() {
         assertVector(Vector3f.from(90f, 0f, 0f), convert(Vector3f.UNIT_X));
-        assertVector(Vector3f.from(0f, 90f, 0f), convert(Vector3f.UNIT_Y));
-        assertVector(Vector3f.from(0f, 0f, 90f), convert(Vector3f.UNIT_Z));
+        assertVector(Vector3f.from(0f, -90f, 0f), convert(Vector3f.UNIT_Y));
+        assertVector(Vector3f.from(0f, 0f, -90f), convert(Vector3f.UNIT_Z));
     }
 
     @Test
@@ -69,4 +69,3 @@ class DisplayQuaternionConverterTest {
         assertEquals(expected.getZ(), actual.getZ(), EPSILON);
     }
 }
-

@@ -58,10 +58,16 @@ class DisplayEntityDefinitionsTest {
     }
 
     @Test
-    void definesNineTransformPropertiesPerEntity() {
+    void definesFourteenTransformPropertiesPerEntity() {
         mockContext(() -> {
-            assertEquals(9, DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().size());
-            assertEquals(9, DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().size());
+            assertEquals(14, DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().size());
+            assertEquals(14, DisplayBedrockEntityDefinitions.ITEM_DISPLAY.properties().size());
+            assertTrue(DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().contains(
+                    DisplayBedrockEntityDefinitions.ENTITY_YAW));
+            assertTrue(DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().contains(
+                    DisplayBedrockEntityDefinitions.ENTITY_PITCH));
+            assertTrue(DisplayBedrockEntityDefinitions.BLOCK_DISPLAY.properties().contains(
+                    DisplayBedrockEntityDefinitions.TRANSLATION_X));
         });
     }
 }

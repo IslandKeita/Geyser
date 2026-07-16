@@ -41,9 +41,13 @@ public final class DisplayCoordinateConverter {
     }
 
     /**
-     * Converts world-space blocks to Bedrock geometry/animation units.
+     * Converts Java display-local blocks to Bedrock geometry/animation units.
+     * Bedrock geometry local Z faces the opposite direction from Java display model Z.
      */
     public static Vector3f blocksToGeometryUnits(Vector3f blocks) {
-        return blocks.mul(GEOMETRY_UNITS_PER_BLOCK);
+        return Vector3f.from(
+                blocks.getX() * GEOMETRY_UNITS_PER_BLOCK,
+                blocks.getY() * GEOMETRY_UNITS_PER_BLOCK,
+                -blocks.getZ() * GEOMETRY_UNITS_PER_BLOCK);
     }
 }

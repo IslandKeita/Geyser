@@ -36,6 +36,7 @@ import org.geysermc.geyser.entity.spawn.EntitySpawnContext;
 import org.geysermc.geyser.util.DisplayCoordinateConverter;
 import org.geysermc.geyser.util.DisplayQuaternionConverter;
 import org.geysermc.geyser.util.EntityUtils;
+import org.geysermc.geyser.util.MathUtils;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
@@ -65,6 +66,7 @@ public class DisplayBaseEntity extends Entity {
 
     public DisplayBaseEntity(EntitySpawnContext context) {
         super(context);
+        setEntityRotationProperties(yaw, pitch);
     }
 
     @Override
@@ -102,6 +104,15 @@ public class DisplayBaseEntity extends Entity {
             return;
         }
 
+        if (propertyManager != null) {
+            Vector3f geometryTranslation = DisplayCoordinateConverter.blocksToGeometryUnits(this.baseTranslation);
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.TRANSLATION_X, displayTranslationComponent(geometryTranslation.getX()));
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.TRANSLATION_Y, displayTranslationComponent(geometryTranslation.getY()));
+            propertyManager.addProperty(DisplayBedrockEntityDefinitions.TRANSLATION_Z, displayTranslationComponent(geometryTranslation.getZ()));
+            return;
+        }
+
+        // TEXT_DISPLAY continues to use the existing armor-stand world-position approximation.
         if (this.vehicle == null) {
             this.setRiderSeatPosition(this.baseTranslation);
             this.moveAbsoluteRaw(position, yaw, pitch, headYaw, onGround, true);
@@ -197,6 +208,29 @@ public class DisplayBaseEntity extends Entity {
         }
     }
 
+    @Override
+    public void moveRelative(double relX, double relY, double relZ, float yaw, float pitch, float headYaw, boolean isOnGround) {
+        setEntityRotationProperties(yaw, pitch);
+        super.moveRelative(relX, relY, relZ, yaw, pitch, headYaw, isOnGround);
+    }
+
+    @Override
+    public void moveAbsolute(Vector3f position, float yaw, float pitch, float headYaw, boolean isOnGround, boolean teleported) {
+        setEntityRotationProperties(yaw, pitch);
+        super.moveAbsolute(position, yaw, pitch, headYaw, isOnGround, teleported);
+    }
+
+    private void setEntityRotationProperties(float yaw, float pitch) {
+        if (propertyManager == null) {
+            return;
+        }
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.ENTITY_YAW, MathUtils.wrapDegrees(yaw));
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.ENTITY_PITCH, MathUtils.wrapDegrees(pitch));
+        if (isValid()) {
+            updateBedrockMetadata();
+        }
+    }
+
     private static float finiteOr(float value, float fallback) {
         return Float.isFinite(value) ? value : fallback;
     }
@@ -205,8 +239,17 @@ public class DisplayBaseEntity extends Entity {
         return Math.clamp(finiteOr(value, 1f), -64f, 64f);
     }
 
+    private float displayTranslationComponent(float geometryUnits) {
+        float finite = finiteOr(geometryUnits, 0f);
+        float clamped = Math.clamp(finite, -1024f, 1024f);
+        if (clamped != finite) {
+            warnUnsupported("translation outside the +/-64 block placeholder range");
+        }
+        return clamped;
+    }
+
     @Override
     public Vector3f bedrockPosition() {
-        return super.bedrockPosition().add(baseTranslation);
+        return propertyManager == null ? super.bedrockPosition().add(baseTranslation) : super.bedrockPosition();
     }
 }
