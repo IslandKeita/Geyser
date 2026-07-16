@@ -33,6 +33,7 @@ import org.geysermc.geyser.entity.type.AbstractArrowEntity;
 import org.geysermc.geyser.entity.type.AbstractWindChargeEntity;
 import org.geysermc.geyser.entity.type.AreaEffectCloudEntity;
 import org.geysermc.geyser.entity.type.ArrowEntity;
+import org.geysermc.geyser.entity.type.BlockDisplayEntity;
 import org.geysermc.geyser.entity.type.BoatEntity;
 import org.geysermc.geyser.entity.type.ChestBoatEntity;
 import org.geysermc.geyser.entity.type.CommandBlockMinecartEntity;
@@ -50,6 +51,7 @@ import org.geysermc.geyser.entity.type.FurnaceMinecartEntity;
 import org.geysermc.geyser.entity.type.HangingEntity;
 import org.geysermc.geyser.entity.type.InteractionEntity;
 import org.geysermc.geyser.entity.type.ItemEntity;
+import org.geysermc.geyser.entity.type.ItemDisplayEntity;
 import org.geysermc.geyser.entity.type.ItemFrameEntity;
 import org.geysermc.geyser.entity.type.LeashKnotEntity;
 import org.geysermc.geyser.entity.type.LightningEntity;
@@ -180,6 +182,7 @@ public final class VanillaEntities {
     public static final VanillaEntityType<ChestBoatEntity> BAMBOO_CHEST_RAFT;
     public static final VanillaEntityType<BatEntity> BAT;
     public static final VanillaEntityType<BeeEntity> BEE;
+    public static final VanillaEntityType<BlockDisplayEntity> BLOCK_DISPLAY;
     public static final VanillaEntityType<BoatEntity> BIRCH_BOAT;
     public static final VanillaEntityType<ChestBoatEntity> BIRCH_CHEST_BOAT;
     public static final VanillaEntityType<BlazeEntity> BLAZE;
@@ -240,6 +243,7 @@ public final class VanillaEntities {
     public static final VanillaEntityType<InteractionEntity> INTERACTION;
     public static final VanillaEntityType<IronGolemEntity> IRON_GOLEM;
     public static final VanillaEntityType<ItemEntity> ITEM;
+    public static final VanillaEntityType<ItemDisplayEntity> ITEM_DISPLAY;
     public static final VanillaEntityType<ItemFrameEntity> ITEM_FRAME;
     public static final VanillaEntityType<BoatEntity> JUNGLE_BOAT;
     public static final VanillaEntityType<ChestBoatEntity> JUNGLE_CHEST_BOAT;
@@ -434,21 +438,32 @@ public final class VanillaEntities {
                     .build();
 
             EntityTypeBase<DisplayBaseEntity> displayBase = EntityTypeBase.baseInherited(DisplayBaseEntity.class, entityBase)
-                    .addTranslator(null) // Interpolation delay
-                    .addTranslator(null) // Transformation interpolation duration
-                    .addTranslator(null) // Position/Rotation interpolation duration
+                    .addTranslator(MetadataTypes.INT, DisplayBaseEntity::setInterpolationDelay)
+                    .addTranslator(MetadataTypes.INT, DisplayBaseEntity::setTransformationInterpolationDuration)
+                    .addTranslator(MetadataTypes.INT, DisplayBaseEntity::setPositionRotationInterpolationDuration)
                     .addTranslator(MetadataTypes.VECTOR3, DisplayBaseEntity::setTranslation) // Translation
-                    .addTranslator(null) // Scale
-                    .addTranslator(null) // Left rotation
-                    .addTranslator(null) // Right rotation
-                    .addTranslator(null) // Billboard render constraints
-                    .addTranslator(null) // Brightness override
-                    .addTranslator(null) // View range
-                    .addTranslator(null) // Shadow radius
-                    .addTranslator(null) // Shadow strength
-                    .addTranslator(null) // Width
-                    .addTranslator(null) // Height
-                    .addTranslator(null) // Glow color override
+                    .addTranslator(MetadataTypes.VECTOR3, DisplayBaseEntity::setDisplayScale)
+                    .addTranslator(MetadataTypes.QUATERNION, DisplayBaseEntity::setLeftRotation)
+                    .addTranslator(MetadataTypes.QUATERNION, DisplayBaseEntity::setRightRotation)
+                    .addTranslator(MetadataTypes.BYTE, DisplayBaseEntity::setBillboardConstraints)
+                    .addTranslator(MetadataTypes.INT, DisplayBaseEntity::setBrightnessOverride)
+                    .addTranslator(MetadataTypes.FLOAT, DisplayBaseEntity::setViewRange)
+                    .addTranslator(MetadataTypes.FLOAT, DisplayBaseEntity::setShadowRadius)
+                    .addTranslator(MetadataTypes.FLOAT, DisplayBaseEntity::setShadowStrength)
+                    .addTranslator(MetadataTypes.FLOAT, DisplayBaseEntity::setDisplayWidth)
+                    .addTranslator(MetadataTypes.FLOAT, DisplayBaseEntity::setDisplayHeight)
+                    .addTranslator(MetadataTypes.INT, DisplayBaseEntity::setGlowColorOverride)
+                    .build();
+            BLOCK_DISPLAY = VanillaEntityType.inherited(BlockDisplayEntity::new, displayBase)
+                    .type(EntityType.BLOCK_DISPLAY)
+                    .bedrockDefinition(DisplayBedrockEntityDefinitions.BLOCK_DISPLAY)
+                    .addTranslator(MetadataTypes.BLOCK_STATE, BlockDisplayEntity::setBlock)
+                    .build();
+            ITEM_DISPLAY = VanillaEntityType.inherited(ItemDisplayEntity::new, displayBase)
+                    .type(EntityType.ITEM_DISPLAY)
+                    .bedrockDefinition(DisplayBedrockEntityDefinitions.ITEM_DISPLAY)
+                    .addTranslator(MetadataTypes.ITEM_STACK, ItemDisplayEntity::setItem)
+                    .addTranslator(MetadataTypes.BYTE, ItemDisplayEntity::setItemTransform)
                     .build();
             TEXT_DISPLAY = VanillaEntityType.inherited(TextDisplayEntity::new, displayBase)
                     .type(EntityType.TEXT_DISPLAY)

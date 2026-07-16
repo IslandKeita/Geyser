@@ -45,6 +45,7 @@ import org.geysermc.geyser.api.event.lifecycle.GeyserDefineEntityPropertiesEvent
 import org.geysermc.geyser.api.util.Identifier;
 import org.geysermc.geyser.entity.BedrockEntityDefinition;
 import org.geysermc.geyser.entity.CustomBedrockEntityDefinition;
+import org.geysermc.geyser.entity.DisplayBedrockEntityDefinitions;
 import org.geysermc.geyser.entity.GeyserEntityType;
 import org.geysermc.geyser.entity.VanillaEntities;
 import org.geysermc.geyser.entity.properties.type.BooleanProperty;
@@ -379,6 +380,12 @@ public final class EntityUtils {
     public static void callEntityEvents() {
         // entities would be initialized before these events are called
         List<CustomBedrockEntityDefinition> customEntities = new ArrayList<>();
+        DisplayBedrockEntityDefinitions.init();
+        for (BedrockEntityDefinition definition : Registries.BEDROCK_ENTITY_DEFINITIONS.get().values()) {
+            if (definition instanceof CustomBedrockEntityDefinition customDefinition) {
+                customEntities.add(customDefinition);
+            }
+        }
         GeyserImpl.getInstance().getEventBus().fire(new GeyserDefineEntitiesEvent() {
 
             @Override
