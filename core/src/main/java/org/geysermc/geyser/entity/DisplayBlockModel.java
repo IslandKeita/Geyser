@@ -41,7 +41,8 @@ public enum DisplayBlockModel {
     LAPIS_BLOCK("minecraft:lapis_block", 6),
     REDSTONE_BLOCK("minecraft:redstone_block", 7),
     NETHERITE_BLOCK("minecraft:netherite_block", 8),
-    GLASS("minecraft:glass", 9);
+    GLASS("minecraft:glass", 9),
+    AMETHYST_CRYSTAL("minecraft:amethyst_block", 10);
 
     private final String javaIdentifier;
     private final int modelId;
