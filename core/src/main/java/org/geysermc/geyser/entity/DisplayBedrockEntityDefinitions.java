@@ -38,7 +38,7 @@ import org.geysermc.geyser.registry.Registries;
 public final class DisplayBedrockEntityDefinitions {
     public static final IntProperty INTERPOLATION_DURATION = intProperty("interpolation_duration", 0, 1200, 0);
     public static final IntProperty INTERPOLATION_DELAY = intProperty("interpolation_delay", -1200, 1200, 0);
-    public static final IntProperty BLOCK_MODEL = intProperty("block_model", 0, DisplayBlockModel.maxModelId(), 0);
+    public static final IntProperty BLOCK_MODEL = intProperty("block_model", 0, DisplayBlockModelResolver.maxModelId(), 0);
     public static final IntProperty ITEM_MODEL = intProperty("item_model", 0, DisplayItemModel.maxModelId(), 0);
     public static final IntProperty ITEM_CONTEXT = intProperty("item_context", 0, 8, 0);
     public static final IntProperty ITEM_VISIBLE = intProperty("item_visible", 0, 1, 0);

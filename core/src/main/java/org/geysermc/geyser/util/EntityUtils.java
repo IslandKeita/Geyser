@@ -42,10 +42,12 @@ import org.geysermc.geyser.api.entity.property.type.GeyserFloatEntityProperty;
 import org.geysermc.geyser.api.entity.property.type.GeyserStringEnumProperty;
 import org.geysermc.geyser.api.event.lifecycle.GeyserDefineEntitiesEvent;
 import org.geysermc.geyser.api.event.lifecycle.GeyserDefineEntityPropertiesEvent;
+import org.geysermc.geyser.api.event.lifecycle.GeyserDefineBlockDisplayModelsEvent;
 import org.geysermc.geyser.api.util.Identifier;
 import org.geysermc.geyser.entity.BedrockEntityDefinition;
 import org.geysermc.geyser.entity.CustomBedrockEntityDefinition;
 import org.geysermc.geyser.entity.DisplayBedrockEntityDefinitions;
+import org.geysermc.geyser.entity.DisplayBlockModelResolver;
 import org.geysermc.geyser.entity.GeyserEntityType;
 import org.geysermc.geyser.entity.VanillaEntities;
 import org.geysermc.geyser.entity.properties.type.BooleanProperty;
@@ -80,6 +82,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -511,6 +514,19 @@ public final class EntityUtils {
                 return List.copyOf(definition.registeredProperties().getProperties());
             }
         });
+
+        GeyserImpl.getInstance().getEventBus().fire(new GeyserDefineBlockDisplayModelsEvent() {
+            @Override
+            public void register(@NonNull String javaBlockState, int modelId) {
+                DisplayBlockModelResolver.register(javaBlockState, modelId);
+            }
+
+            @Override
+            public @NonNull Map<String, Integer> models() {
+                return DisplayBlockModelResolver.models();
+            }
+        });
+        DisplayBlockModelResolver.freeze();
 
         for (var definition : Registries.BEDROCK_ENTITY_DEFINITIONS.get().values()) {
             if (!definition.registeredProperties().isEmpty()) {

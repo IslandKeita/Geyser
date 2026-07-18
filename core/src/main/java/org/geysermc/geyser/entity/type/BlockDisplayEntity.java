@@ -29,7 +29,7 @@ import lombok.Getter;
 import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.geysermc.geyser.entity.DisplayBedrockEntityDefinitions;
-import org.geysermc.geyser.entity.DisplayBlockModel;
+import org.geysermc.geyser.entity.DisplayBlockModelResolver;
 import org.geysermc.geyser.entity.spawn.EntitySpawnContext;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
@@ -47,12 +47,12 @@ public class BlockDisplayEntity extends DisplayBaseEntity {
         this.block = session.getBlockMappings().getBedrockBlock(javaBlockState);
         this.metadata.put(EntityDataTypes.BLOCK, block);
 
-        String javaIdentifier = BlockState.of(javaBlockState).block().javaIdentifier().toString();
-        DisplayBlockModel model = DisplayBlockModel.fromJavaIdentifier(javaIdentifier);
+        BlockState state = BlockState.of(javaBlockState);
+        Integer model = DisplayBlockModelResolver.resolve(state);
         if (model == null) {
-            model = DisplayBlockModel.STONE;
-            warnUnsupported("BlockDisplay model " + javaIdentifier);
+            model = 0;
+            warnUnsupported("BlockDisplay model " + state);
         }
-        propertyManager.addProperty(DisplayBedrockEntityDefinitions.BLOCK_MODEL, model.modelId());
+        propertyManager.addProperty(DisplayBedrockEntityDefinitions.BLOCK_MODEL, model);
     }
 }
